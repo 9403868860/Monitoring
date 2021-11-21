@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 30s
+  #evaluation_interval: 50s
+  #scrape_timeout: 40s
+rule_files:
+- '/home/sarbajit/mon-log-agg/prometheus/alert.rules'
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+    # whatever you want
+      - '192.168.56.88:9093'
+scrape_configs:
+- job_name: 'prometheus'
+  static_configs:
+  - targets: ['192.168.56.88:9090']
+    labels:
+      alias: 'prometheus'
+- job_name: 'cadvisor'
+  static_configs:
+  - targets: ['192.168.56.88:15015']
+    labels:
+      alias: 'cadvisor'
+- job_name: 'node-exporter'
+  static_configs:
+   - targets: ['192.168.56.88:9100']
+     labels:
+       alias: 'node-exporter'
+- job_name: 'deployment'
+  #scrape_interval: 10s
+  #scrape_timeout: 90s
+  #metrics_path: /
+  static_configs:
+   - targets: ['192.168.56.88:9278']
+     labels:
+       alias: 'deployment'
+- job_name: 'sonarqube'
+  static_configs:
+   - targets: ['192.168.56.88:9000']
+     labels:
+       alias: 'sonarqube'

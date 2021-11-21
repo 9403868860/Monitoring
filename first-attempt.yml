@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  prometheus:
+    image: 'prom/prometheus:latest'
+    container_name: prometheus
+    volumes:
+    - ./prometheus.yml:/home/sarbajit/mon-log-agg/prometheus.yml
+    command:
+    - '--config.file=/home/sarbajit/mon-log-agg/prometheus.yml'
+    ports:
+    - '9090:9090'
+    network_mode: bridge
+  cadvisor:
+    image: 'google/cadvisor:latest'
+    container_name: cadvisor
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk:/dev/disk/:ro
+    ports:
+    - '15015:8080'
+    network_mode: bridge
+  container-exporter:
+    image: prom/container-exporter
+    container_name: PROM_CON_EXP
+    volumes:
+    - /sys/fs/cgroup:/cgroup
+    - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+    - '9104:9104'
+    network_mode: bridge
+      #networks:
+      #  default:
+      #    external: true
+      #    name: bridge
